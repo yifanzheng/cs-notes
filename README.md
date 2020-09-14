@@ -1,2 +1,22 @@
-# java-notes
-Java 技术摘要
+
+<p align="center">
+<a href="https://github.com/yifanzheng/java-notes" target="_blank">
+<img src="https://i.loli.net/2020/09/14/yKzFE7UO2SQfdRb.png"/></a>
+</p>
+
+主要收录一些 Java 编程以及面试相关的技术文章，欢迎补充。
+
+## Java
+
+- [一文读懂 Java 集合中的快速失败(fail-fast)和安全失败(fail-safe)机制](docs/java/fail-fast&fail-safe.md)
+- [聊一聊 Java中的 ThreadLocal](docs/java/聊一聊Java中的ThreadLocal.md)
+- [volatile 关键字，你真的理解吗？](docs/java/volatile.md)
+- [设计模式也可以这么简单](docs/java/设计模式也可以这么简单.md)
+
+## Spring/Spring Boot
+
+- [Spring 事务管理及失效总结](docs/spring/Spring事务管理及失效总结.md)
+
+## Git
+
+- [如何规范地提交 Git Commit Message](docs/git/git-commit-message.md)
