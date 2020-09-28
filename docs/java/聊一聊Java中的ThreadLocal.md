@@ -5,7 +5,6 @@
 
 文章稍微有点长，不过介绍的还是比较细致。
 
-
 ### ThreadLocal 是什么
 
 ThreadLocal 是一个关于创建线程局部变量的类，主要作用是做数据隔离，保存到 ThreadLocal 中的数据只属于当前线程，该数据对其他线程而言是隔离的。也就是说，使用 ThreadLocal 保存的数据只能被当前线程访问，其他线程无法访问和修改。在多线程环境下，防止自己的变量被其他线程篡改。
@@ -566,10 +565,10 @@ public static void main(String[] args) {
 
 ### 参考
 
-[1] [一文搞懂 ThreadLocal 原理](https://www.cnblogs.com/wupeixuan/p/12638203.html)  
-[2] [使用ThreadLocal](https://www.liaoxuefeng.com/wiki/1252599548343744/1306581251653666)  
-[3] [Java面试必问，ThreadLocal终极篇](https://www.jianshu.com/p/377bb840802f)  
-[4] [理解Java中的ThreadLocal](https://droidyue.com/blog/2016/03/13/learning-threadlocal-in-java/)
+[1] 一文搞懂 ThreadLocal 原理: [https://www.cnblogs.com/wupeixuan/p/12638203.html](https://www.cnblogs.com/wupeixuan/p/12638203.html)  
+[2] 使用ThreadLocal: [https://www.liaoxuefeng.com/wiki/1252599548343744/1306581251653666](https://www.liaoxuefeng.com/wiki/1252599548343744/1306581251653666)  
+[3] Java面试必问，ThreadLocal终极篇: [https://www.jianshu.com/p/377bb840802f](https://www.jianshu.com/p/377bb840802f)  
+[4] 理解Java中的ThreadLocal: [https://droidyue.com/blog/2016/03/13/learning-threadlocal-in-java/](https://droidyue.com/blog/2016/03/13/learning-threadlocal-in-java/)
 
 
 

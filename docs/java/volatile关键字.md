@@ -10,7 +10,7 @@
 
 大家都应该知道 volatile 的主要作用有两点：
 - 保证变量的内存可见性
-- 禁止指令重排序
+- 禁止 CPU 进行指令重排序
 
 那么，什么是内存可见性，什么是指令重排序，以及它们涉及了那些机制呢？下面就让我们来看看吧。
 
@@ -80,7 +80,7 @@ class MyThread extends Thread {
 
 **Java 内存模型**
 
-JMM（Java Memory Model）：Java 内存模型，是 Java 虚拟机规范中所定义的一种内存模型，Java 内存模型是标准化的，屏蔽掉了底层不同计算机的区别。也就是说，JMM 是 JVM 中定义的一种并发编程的底层模型机制。
+JMM（Java Memory Model）就是 Java 内存模型，是 Java 虚拟机规范中所定义的一种内存模型。因为在不同的硬件生产商和不同的操作系统下，内存的访问有一定的差异，所以会造成相同的程序运行在不同的系统上会出现各种问题。因此 Java 内存模型屏蔽了各种硬件和操作系统的访问差异的，保证了 Java 程序在各种平台下对内存的访问都能保证一致的并发效果。
 
 JMM 定义了线程和主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读/写共享变量的副本。
 
@@ -94,13 +94,15 @@ JMM 的规定：
 - 不同线程之间也不能直接访问对方工作内存中的变量，线程间变量的值的传递需要通过主内存中转来完成。
 
 JMM 的抽象示意图：![JMM](https://img-blog.csdnimg.cn/20200506232135411.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L29zY2hpbmFfNDE3OTA5MDU=,size_16,color_FFFFFF,t_70)
+
 然而，JMM 这样的规定可能会导致线程对共享变量的修改没有即时更新到主内存，或者线程没能够即时将共享变量的最新值同步到工作内存中，从而使得线程在使用共享变量的值时，该值并不是最新的。
 
-**正因为 JMM 这样的机制，就出现了可见性问题。也就是我们上面那个例子出现的问题**。
+**正因为 JMM 这样的机制，就出现了可见性问题，也就是我们上面那个例子出现的问题**。
 
-那我们要如何解决可见性问题呢？接下来我们就聊聊内存可见性以及可见性问题的解决方案。
+那我们要如何解决可见性问题呢？接下来我们就聊聊内存可见性以及可见性问题的解决方案。（如果对 JMM 感兴趣，可以看看我写的这篇文章：[理解什么是 JMM](docs/java/理解什么是JMM.md)）
 
 ### 内存可见性
+
 内存可见性是指当一个线程修改了某个变量的值，其它线程总是能知道这个变量变化。也就是说，如果线程 A 修改了共享变量 V 的值，那么线程 B 在使用 V 的值时，能立即读到 V 的最新值。
 
 ### 可见性问题的解决方案
@@ -215,6 +217,8 @@ volatile 保证了不同线程对共享变量操作的可见性，也就是说�
 
 为了提高性能，在遵守 `as-if-serial` 语义（即不管怎么重排序，单线程下程序的执行结果不能被改变。编译器，runtime 和处理器都必须遵守。）的情况下，编译器和处理器常常会对指令做重排序。
 
+为了使指令更加符合 CPU 的执行特性，最大限度的发挥机器的性能，提高程序的执行效率，只要程序的最终结果与它顺序化情况的结果相等，那么指令的执行顺序可以与代码逻辑顺序不一致，这个过程就叫做**指令的重排序**。
+
 一般重排序可以分为如下三种类型：
 
 - 编译器优化重排序。编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序。
@@ -244,7 +248,11 @@ if (flag) { // 3
 
 这个例子中， 使用 volatile 不仅保证了变量的内存可见性，还禁止了指令的重排序，即保证了 volatile 修饰的变量编译后的顺序与程序的执行顺序一样。那么使用 volatile 修饰 flag 变量后，在线程 A 中，保证了代码 1 的执行顺序一定在代码 2 之前。
 
-那么，让我们继续往下探索， volatile 是如何禁止指令重排序的呢？这里我们将引出一个概念：`内存屏障指令`
+从上面的内容中，我们可以知道**在单线程环境下，指令重排序并不会影响程序的执行结果，并且还提高了性能；但是在多线程环境下，指令重排序就不能保证不会影响程序的执行结果，所以需要禁止指令重排序**。
+
+### volatile 禁止指令重排序的原理
+
+上面，我们已经了解了指令重排序。那么，volatile 是如何禁止指令重排序的呢？这里我们将引出一个概念：`内存屏障指令`
 
 **内存屏障指令**
 
@@ -269,7 +277,6 @@ JMM 把内存屏障指令分为下列四类：
 下面我们来看看 volatile  读 / 写时是如何插入内存屏障的，见下图：
 
 ![volatile内存屏障](https://img-blog.csdnimg.cn/20200506233129498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L29zY2hpbmFfNDE3OTA5MDU=,size_16,color_FFFFFF,t_70)
-
 
 
 从上图，我们可以知道 volatile 读 / 写插入内存屏障规则：
@@ -351,16 +358,16 @@ public class Singleton {
 
 ### 参考
 
-happens-before 俗解：[http://ifeve.com/easy-happens-before/](http://ifeve.com/easy-happens-before/)
+[1] happens-before 俗解：[http://ifeve.com/easy-happens-before/](http://ifeve.com/easy-happens-before/)
 
-JMM Cookbook(一)指令重排：[http://ifeve.com/jmm-cookbook-reorderings/](http://ifeve.com/jmm-cookbook-reorderings/)
+[2] JMM Cookbook(一)指令重排：[http://ifeve.com/jmm-cookbook-reorderings/](http://ifeve.com/jmm-cookbook-reorderings/)
 
-JMM Cookbook(二)内存屏障：[http://ifeve.com/jmm-cookbook-mb/](http://ifeve.com/jmm-cookbook-mb/)
+[3] JMM Cookbook(二)内存屏障：[http://ifeve.com/jmm-cookbook-mb/](http://ifeve.com/jmm-cookbook-mb/)
 
-深入理解 Java 内存模型（二）——重排序：[https://www.infoq.cn/article/java-memory-model-2/](https://www.infoq.cn/article/java-memory-model-2/)
+[4] 深入理解 Java 内存模型（二）——重排序：[https://www.infoq.cn/article/java-memory-model-2/](https://www.infoq.cn/article/java-memory-model-2/)
 
-深入理解 Java 内存模型（四）——volatile：[https://www.infoq.cn/article/java-memory-model-4](https://www.infoq.cn/article/java-memory-model-4)
+[5] 深入理解 Java 内存模型（四）——volatile：[https://www.infoq.cn/article/java-memory-model-4](https://www.infoq.cn/article/java-memory-model-4)
 
-窥探真相：volatile 可见性实现原理：[https://segmentfault.com/a/1190000020909627](https://segmentfault.com/a/1190000020909627)
+[6] 窥探真相：volatile 可见性实现原理：[https://segmentfault.com/a/1190000020909627](https://segmentfault.com/a/1190000020909627)
 
 > 因为是个人学习笔记，难免存在一些错误或纰漏，也请小伙伴们指正。
