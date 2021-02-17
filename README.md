@@ -21,3 +21,7 @@
 ## Git
 
 - [如何规范地提交 Git Commit Message](docs/git/git-commit-message.md)
+
+## 补充
+
+部分知识点以 [issue](https://github.com/yifanzheng/java-notes/issues) 形式进行补充
