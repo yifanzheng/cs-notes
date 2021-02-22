@@ -4,7 +4,7 @@
 <img src="https://i.loli.net/2020/09/14/yKzFE7UO2SQfdRb.png"/></a>
 </p>
 
-主要收录一些 Java 编程以及面试相关的技术文章，欢迎补充。
+主要记录一些 Java 以及面试相关的知识点，欢迎补充。
 
 ## Java
 
