@@ -291,7 +291,7 @@ private void set(ThreadLocal<?> key, Object value) {
 - 如果位置 i 存在有 Entry 对象但是 Entry 的 key 为 null，则使用传入的 key 和 value 替换
 - 如果位置 i 刚好是空的，就新建 Entry 对象插入到该位置。
 
-到这里，我们知道 ThreadLocalMap 是通过 `nextIndex(i, len)` 方法解决 Hash 冲突的问题。通过遍历，从冲突的位置依次往后搜索空单元，如果到数组尾部，再从头开始搜索，形成环形查找。其实，这就是**线性搜索法**。
+到这里，我们知道 ThreadLocalMap 是通过 `nextIndex(i, len)` 方法解决 Hash 冲突的问题。通过遍历，从冲突的位置依次往后搜索空单元，如果到数组尾部，再从头开始搜索，形成环形查找。其实，这就是**线性搜索法**，开放地址法的一种实现手段。
 
 这里需要注意一下 `threadLocalHashCode`，请看 ThreadLocal 部分源码：
 
