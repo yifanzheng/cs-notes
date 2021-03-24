@@ -246,7 +246,7 @@ static class ThreadLocalMap {
 
 ### ThreadLocalMap 的 Hash 冲突问题
 
-上面，我们知道 ThreadLocalMap 底层数据结构是一个数组，那么它是如何解决 Hash 冲突的呢？
+上面，我们知道 **ThreadLocalMap 底层数据结构是一个数组**，元素是 Entry，那么它是如何解决 Hash 冲突的呢？
 
 我们先看看 ThreadLocalMap 的 set 方法源码：
 
@@ -312,7 +312,7 @@ public class ThreadLocal<T> {
     ...
 }
 ```
-根据源码可知，每个 ThreadLocal 对象都有一个 hash 值threadLocalHashCode，每初始化一个 ThreadLocal 对象，hash 值就递增 `0x61c88647` 大小。查资料得知，`0x61c88647` 这个数是有特殊意义的，它能够保证 hash 表的每个散列桶能够均匀的分布，这是**斐波那契散列**。
+根据源码可知，每个 ThreadLocal 对象都有一个 hash 值 threadLocalHashCode，每初始化一个 ThreadLocal 对象，hash 值就递增 `0x61c88647` 大小。查资料得知，`0x61c88647` 这个数是有特殊意义的，它能够保证 hash 表的每个散列桶能够均匀的分布，这是**斐波那契散列**。
 
 说完 ThreadLocalMap 的 set 方法，我们再来看看它的 getEntry 方法。
 
