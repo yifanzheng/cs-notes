@@ -179,7 +179,7 @@ protected T initialValue() {
 
 - Thread 类中维护着一个 ThreadLocalMap 类型的成员变量。
 - ThreadLocalMap 是一个定义在 ThreadLocal 类中的内部类，是一个 map，用Entry 来进行数据存储。
-- 当调用 ThreadLocal 的 set() 方法时，先获取当前线程的 ThreadLocalMap 对象，然后以 ThreadLocal 对象作为 key 往ThreadLocalMap 中设置值。
+- 当调用 ThreadLocal 的 set() 方法时，先获取当前线程的 ThreadLocalMap 对象，然后以 ThreadLocal 对象作为 key 往 ThreadLocalMap 中设置值。
 - 当调用 ThreadLocal 的 get() 方法时，也是先获取当前线程的 ThreadLocalMap 对象，以 ThreadLocal 对象作为 key 从 ThreadLocalMap 中获取值。
 - ThreadLocal 本身并不存储值，它只是作为一个 key 来让线程在ThreadLocalMap 中获取或设置值。
 
@@ -242,7 +242,7 @@ static class ThreadLocalMap {
 从源码中，我们可以得知 ThreadLocalMap 的结构大致如下：
 ![ThreadLocalMap](https://img-blog.csdnimg.cn/2020081715500060.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L29zY2hpbmFfNDE3OTA5MDU=,size_16,color_FFFFFF,t_70#pic_center)
 
-在创建 ThreadLoalMap 对象时会初始化一个大小是 16 的 Entry 数组，扩容阈值是数组大小的 2/3，Entry 对象用来保存每一个键值对(key-value)，而这里的 key 永远都是ThreadLocal 对象本身，通过 ThreadLocal 对象的 set 方法，把 ThreadLocal 对象自己当做 key，放进了 ThreadLoalMap 中。
+在创建 ThreadLoalMap 对象时会初始化一个大小是 16 的 Entry 数组，扩容阈值是数组大小的 2/3，扩容后 Entry 数组大小是原来的 2 倍，Entry 对象用来保存每一个键值对(key-value)，而这里的 key 永远都是 ThreadLocal 对象本身，通过 ThreadLocal 对象的 set 方法，把 ThreadLocal 对象自己当做 key，放进了 ThreadLoalMap 中。
 
 ### ThreadLocalMap 的 Hash 冲突问题
 
@@ -350,7 +350,7 @@ private Entry getEntryAfterMiss(ThreadLocal<?> key, int i, Entry e) {
     return null;
 }
 ```
-可以看出，在 getEntry 的时候，也会利用 ThreadLocal 对象的 `threadLocalHashCode` 计算 hash 值以确定 Entry 的位置，然后判断 Entry 的 key 和传入的 key 是否相等。如果相等，就直接返回这个  Entry；如果不相等，说明在 set 值的时候存在 Hash 冲突的情况，然后调用 getEntryAfterMiss 方法继续往下进行环形查找。
+可以看出，在 getEntry 的时候，也会利用 ThreadLocal 对象的 `threadLocalHashCode` 计算 hash 值以确定 Entry 的位置，然后判断 Entry 的 key 和传入的 key 是否相等。如果相等，就直接返回这个 Entry；如果不相等，说明在 set 值的时候存在 Hash 冲突的情况，然后调用 getEntryAfterMiss 方法继续往下进行环形查找。
 
 通过 set 和 getEntry 源码可以看出，如果 Hash 冲突严重的话，它们的效率都很低。
 
@@ -364,7 +364,7 @@ private Entry getEntryAfterMiss(ThreadLocal<?> key, int i, Entry e) {
 
 在实际开发中，会使用线程池去维护线程的创建和复用，比如固定大小的线程池，线程为了复用是不会主动结束的，那么 ThreadLocal 设置的 value 值就一直被引用，就会发生内存泄漏。
 
-其实，为了避免内存泄漏问题， ThreadLocalMap 也是做了很多努力的。细心的小伙伴应该已经注意到了，在 ThreadLocalMap 的 set 和 getEntry 方法中，出现了 `replaceStaleEntry`、`cleanSomeSlots` 以及 `expungeStaleEntry` 方法。这三个方法其实就是清除 key 是 null 的 Entry 对象的。 然而， 核心还是 `expungeStaleEntry` 方法，其他两个方法都调用了它。expungeStaleEntry 方法会将 key 是 null 的 Entry 对象的 value 置为 null，以便垃圾回收时能够清理，同时也会将 Entry 对象置为 null。
+其实，为了避免内存泄漏问题， ThreadLocalMap 也是做了很多努力的。细心的小伙伴应该已经注意到了，在 ThreadLocalMap 的 set 和 getEntry 方法中，出现了 `replaceStaleEntry`、`cleanSomeSlots` 以及 `expungeStaleEntry` 方法。这三个方法其实就是清除 key 是 null 的 Entry 对象的。 然而，核心还是 `expungeStaleEntry` 方法，其他两个方法都调用了它。expungeStaleEntry 方法会将 key 是 null 的 Entry 对象的 value 置为 null，以便垃圾回收时能够清理，同时也会将 Entry 对象置为 null。
 
 expungeStaleEntry 方法源码：
 
@@ -407,7 +407,7 @@ private int expungeStaleEntry(int staleSlot) {
 
 所以，从 ThreadLocal 的设计上看，在调用 set 和 get 方法时，都会对 key 是 null 的 Entry 对象进行清除处理，解决隐藏的内存泄漏的问题。这里不得不佩服 Josh Bloch 和 Doug Lea 大师的厉害之处。
 
-但是，光这样还是不够的，因为只有在调用 ThreadLocal 的 set 或 get 方法时，才会对 key 是 null 的 Entry 对象进行清除处理，这是一个前提条件，但我们不可能在任何情况都调用 set 或 get方法。所以，为了在任何情况下都能防止内存泄漏，我们最好手动调用 ThreadLocal 的 remove 方法，清除过期的数据。
+但是，光这样还是不够的，因为只有在调用 ThreadLocal 的 set 或 get 方法时，才会对 key 是 null 的 Entry 对象进行清除处理，这是一个前提条件，但我们不可能在任何情况都调用 set 或 get 方法。所以，为了在任何情况下都能防止内存泄漏，我们最好手动调用 ThreadLocal 的 remove 方法，清除过期的数据。
 
 ```java
 ThreadLocal<String> threadLocal = new ThreadLocal();
@@ -508,7 +508,7 @@ private void step1() {
 
 ### 思考 
 
-到这里，小伙伴们应该对 ThreadLocal 有一定的了解了。那么，我们来思考两个问题。
+到这里，小伙伴们应该对 ThreadLocal 有一定的了解了。那么，我们来思考下面问题。
 
 **当一个线程中有多个 ThreadLocal 对象，每一个 ThreadLocal 对象是如何区分的呢？**
 
