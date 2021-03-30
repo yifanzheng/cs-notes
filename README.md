@@ -46,23 +46,23 @@
 </tr>
 <tr>
 <td><a href="https://github.com/AobingJava/JavaFamily">AobingJava</a></td>
-<td>蘑菇街敖丙的Java面试总结</td>
+<td>蘑菇街敖丙的 Java 面试总结</td>
 </tr>
 <tr>
 <td><a href="https://bugstack.cn/" rel="nofollow">bugstack</a></td>
-<td>虫洞栈Java干货，面试问题带着例子说明得明明白白</td>
+<td>虫洞栈 Java 干货，面试问题带着例子说明得明明白白</td>
 </tr>
 <tr>
 <td><a href="https://github.com/doocs/advanced-java">advanced-java</a></td>
-<td>互联网Java工程师进阶知识完全扫盲：涵盖高并发、分布式、高可用、微服务、海量数据处理等领域知识</td>
+<td>互联网 Java 工程师进阶知识完全扫盲：涵盖高并发、分布式、高可用、微服务、海量数据处理等领域知识</td>
 </tr>
 <tr>
 <td><a href="https://github.com/seaswalker/spring-analysis">spring-analysis</a></td>
-<td>Spring源码解读(很久未更新了，但是spring基本的精髓都讲到了，适合参考阅读源码)</td>
+<td>Spring 源码解读(很久未更新了，但是 spring 基本的精髓都讲到了，适合参考阅读源码)</td>
 </tr>
 <tr>
 <td><a href="https://github.com/labuladong/fucking-algorithm">fucking-algorithm</a></td>
-<td>labuladong刷算法套路，提供算法题的工具方法思想</td>
+<td>labuladong 刷算法套路，提供算法题的工具方法思想</td>
 </tr>
 <tr>
 <td><a href="https://github.com/youngyangyang04/leetcode-master">leetcode-master</a></td>
@@ -82,7 +82,7 @@
 </tr>
 <tr>
 <td><a href="https://dayarch.top/" rel="nofollow">日拱一兵</a></td>
-<td>挺用心的一个Java博主，解读Java相关技术</td>
+<td>挺用心的一个 Java 博主，解读 Java 相关技术</td>
 </tr>
 <tr>
 <td><a href="https://tech.meituan.com/" rel="nofollow">美团技术团队</a></td>
