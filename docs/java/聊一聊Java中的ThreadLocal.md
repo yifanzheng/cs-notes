@@ -240,7 +240,8 @@ static class ThreadLocalMap {
 ```
 
 从源码中，我们可以得知 ThreadLocalMap 的结构大致如下：
-![ThreadLocalMap](https://img-blog.csdnimg.cn/2020081715500060.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L29zY2hpbmFfNDE3OTA5MDU=,size_16,color_FFFFFF,t_70#pic_center)
+![ThreadMap](https://user-images.githubusercontent.com/22571230/197338589-8163d2b3-432e-43c5-a267-0381da519aeb.png)
+
 
 在创建 ThreadLoalMap 对象时会初始化一个大小是 16 的 Entry 数组，扩容阈值是数组大小的 2/3，扩容后 Entry 数组大小是原来的 2 倍，Entry 对象用来保存每一个键值对(key-value)，而这里的 key 永远都是 ThreadLocal 对象本身，通过 ThreadLocal 对象的 set 方法，把 ThreadLocal 对象自己当做 key，放进了 ThreadLoalMap 中。
 
