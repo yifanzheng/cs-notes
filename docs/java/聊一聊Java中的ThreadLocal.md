@@ -511,6 +511,9 @@ private void step1() {
 
 到这里，小伙伴们应该对 ThreadLocal 有一定的了解了。那么，我们来思考下面问题。
 
+**Thread、 ThreadLocal 及 ThreadLocalMap 三者之间的关系？**
+一个 Thread 里面只有一个ThreadLocalMap ，而在一个 ThreadLocalMap 里面却可以有很多的 ThreadLocal，每一个 ThreadLocal 都对应一个 value。因为一个 Thread 是可以调用多个 ThreadLocal 的，所以 Thread 内部就采用了 ThreadLocalMap 这样 Map 的数据结构来存放 ThreadLocal 和 value。
+
 **当一个线程中有多个 ThreadLocal 对象，每一个 ThreadLocal 对象是如何区分的呢？**
 
 其实，通过 ThreadLocal 的源码，我们可以看到：
